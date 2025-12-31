@@ -1,6 +1,6 @@
 'use client'
 
-import { EventGrid } from "@/components/sections/EventGrid"
+import { EventGrid } from "../../components/sections/EventGrid"
 
 export default function EventsPage() {
     return (

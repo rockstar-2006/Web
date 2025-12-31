@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 interface Event {
     id: string
     title: string
-    type: 'Technical' | 'Cultural'
+    type: 'Technical' | 'Cultural' | 'Gaming'
     price: number
     image: string
 }
