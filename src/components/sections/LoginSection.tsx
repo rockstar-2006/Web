@@ -75,142 +75,180 @@ export default function LoginSection() {
             >
                 {/* Login Form Container */}
                 <motion.div 
-                    className="bg-black/70 backdrop-blur-md rounded-lg p-8 max-w-md w-full text-white border border-green-600/70 shadow-lg shadow-green-600/20 transition-all"
+                    className="relative max-w-md w-full h-auto text-white overflow-hidden group"
                     variants={formVariants}
                     initial="hidden"
                     animate="visible"
-                    whileHover={{ boxShadow: "0 0 30px rgba(16, 185, 129, 0.3)" }}
                 >
-                    <motion.h2 
-                        className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent"
-                        variants={itemVariants}
-                        initial="hidden"
-                        animate="visible"
+                    {/* Outer Border SVG - Sharp Geometric Design */}
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" preserveAspectRatio="none" viewBox="0 0 400 600">
+                        {/* Blur Shadow Layer */}
+                        <path
+                            d="M 30 0 L 370 0 L 400 30 L 400 570 L 370 600 L 30 600 L 0 570 L 0 30 Z"
+                            fill="none"
+                            stroke="#10b981"
+                            strokeWidth="8"
+                            opacity="0.2"
+                            style={{ filter: 'blur(6px)' }}
+                        />
+                        {/* Primary Sharp Green Line */}
+                        <path
+                            d="M 30 0 L 370 0 L 400 30 L 400 570 L 370 600 L 30 600 L 0 570 L 0 30 Z"
+                            fill="none"
+                            stroke="#10b981"
+                            strokeWidth="2"
+                        />
+                        {/* Ultra Sharp White Highlight Edge */}
+                        <path
+                            d="M 30 0 L 370 0 L 400 30 L 400 570 L 370 600 L 30 600 L 0 570 L 0 30 Z"
+                            fill="none"
+                            stroke="#fff"
+                            strokeWidth="0.8"
+                            opacity="0.4"
+                        />
+                    </svg>
+
+                    {/* Inner Container with Gradient Background */}
+                    <div
+                        className="relative flex flex-col overflow-hidden transition-all duration-700 shadow-[inset_0_0_40px_rgba(0,0,0,0.9)]  backdrop-blur-2xl border border-[#10b981]/50"
                     >
-                        Login to Your Account
-                    </motion.h2>
 
-                    <motion.form 
-                        className="space-y-6"
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                    >
-                        {/* Email Field */}
-                        <motion.div 
-                            variants={inputVariants}
-                            initial="hidden"
-                            animate="visible"
-                        >
-                            <motion.label 
-                                htmlFor="email" 
-                                className="block text-sm font-medium mb-2 text-green-300"
+                        {/* Content Area */}
+                        <div className="relative z-20 p-8">
+                            <motion.h2 
+                                className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent"
+                                variants={itemVariants}
+                                initial="hidden"
+                                animate="visible"
                             >
-                                Email Address
-                            </motion.label>
-                            <motion.input
-                                type="email"
-                                id="email"
-                                className="w-full px-4 py-2 rounded-md bg-gray-800/50 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors text-white placeholder-gray-500"
-                                placeholder="Enter your email"
-                                onFocus={() => setFocusedField('email')}
-                                onBlur={() => setFocusedField(null)}
-                                whileFocus={{
-                                    scale: 1.02,
-                                    boxShadow: "0 0 15px rgba(16, 185, 129, 0.3)",
-                                }}
-                                transition={{ type: "spring", stiffness: 400 }}
-                            />
-                        </motion.div>
+                                Welcome Back
+                            </motion.h2>
 
-                        {/* Password Field */}
-                        <motion.div 
-                            variants={inputVariants}
-                            initial="hidden"
-                            animate="visible"
-                        >
-                            <motion.label 
-                                htmlFor="password" 
-                                className="block text-sm font-medium mb-2 text-green-300"
+                            <motion.form 
+                                className="space-y-6"
+                                variants={containerVariants}
+                                initial="hidden"
+                                animate="visible"
                             >
-                                Password
-                            </motion.label>
-                            <motion.input
-                                type="password"
-                                id="password"
-                                className="w-full px-4 py-2 rounded-md bg-gray-800/50 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors text-white placeholder-gray-500"
-                                placeholder="Enter your password"
-                                onFocus={() => setFocusedField('password')}
-                                onBlur={() => setFocusedField(null)}
-                                whileFocus={{
-                                    scale: 1.02,
-                                    boxShadow: "0 0 15px rgba(16, 185, 129, 0.3)",
-                                }}
-                                transition={{ type: "spring", stiffness: 400 }}
-                            />
-                        </motion.div>
+                                {/* Email Field */}
+                                <motion.div 
+                                    variants={inputVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                >
+                                    <motion.label 
+                                        htmlFor="email" 
+                                        className="block text-sm font-medium mb-2 text-green-300"
+                                    >
+                                        Email Address
+                                    </motion.label>
+                                    <motion.input
+                                        type="email"
+                                        id="email"
+                                        className="w-full px-4 py-2 rounded-md bg-gray-800/50 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors text-white placeholder-gray-500"
+                                        placeholder="Enter your email"
+                                        onFocus={() => setFocusedField('email')}
+                                        onBlur={() => setFocusedField(null)}
+                                        whileFocus={{
+                                            scale: 1.02,
+                                            boxShadow: "0 0 15px rgba(16, 185, 129, 0.3)",
+                                        }}
+                                        transition={{ type: "spring", stiffness: 400 }}
+                                    />
+                                </motion.div>
 
-                        <motion.a href="/forgot-password" className="text-sm text-green-400 text-right -mt-4 mb-4 cursor-pointer hover:underline w-full block">Forgot Password?</motion.a>
+                                {/* Password Field */}
+                                <motion.div 
+                                    variants={inputVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                >
+                                    <motion.label 
+                                        htmlFor="password" 
+                                        className="block text-sm font-medium mb-2 text-green-300"
+                                    >
+                                        Password
+                                    </motion.label>
+                                    <motion.input
+                                        type="password"
+                                        id="password"
+                                        className="w-full px-4 py-2 rounded-md bg-gray-800/50 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors text-white placeholder-gray-500"
+                                        placeholder="Enter your password"
+                                        onFocus={() => setFocusedField('password')}
+                                        onBlur={() => setFocusedField(null)}
+                                        whileFocus={{
+                                            scale: 1.02,
+                                            boxShadow: "0 0 15px rgba(16, 185, 129, 0.3)",
+                                        }}
+                                        transition={{ type: "spring", stiffness: 400 }}
+                                    />
+                                </motion.div>
 
-                        {/* Login Button */}
-                        <motion.button
-                            type="submit"
-                            className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-                            variants={buttonVariants}
-                            initial="hidden"
-                            animate="visible"
-                            whileHover="hover"
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            Login
-                        </motion.button>
+                                <motion.a href="/forgot-password" className="block text-sm text-green-400 mt-1 cursor-pointer hover:underline text-right" variants={itemVariants} initial="hidden" animate="visible">
+                                    Forgot your password?
+                                </motion.a>
 
-                        <motion.a href="/register" className="block text-center text-sm text-green-400 mt-2 cursor-pointer hover:underline">Don&apos;t have an account? Register</motion.a>
+                                {/* Login Button */}
+                                <motion.button
+                                    type="submit"
+                                    className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+                                    variants={buttonVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    whileHover="hover"
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    Login
+                                </motion.button>
 
-                        {/* Divider with Animation */}
-                        <motion.div 
-                            className="flex items-center mt-4 mb-10"
-                            variants={itemVariants}
-                            initial="hidden"
-                            animate="visible"
-                        >
-                            <motion.div 
-                                className="flex-grow border-t border-green-600/70"
-                                initial={{ scaleX: 0 }}
-                                animate={{ scaleX: 1 }}
-                                transition={{ delay: 0.8, duration: 0.6 }}
-                            />
-                            <span className="mx-2 text-green-400 text-xs font-semibold">OR</span>
-                            <motion.div 
-                                className="flex-grow border-t border-green-600/70"
-                                initial={{ scaleX: 0 }}
-                                animate={{ scaleX: 1 }}
-                                transition={{ delay: 0.8, duration: 0.6 }}
-                            />
-                        </motion.div>
+                                <motion.a href="/register" className="block text-center text-sm text-green-400 mt-2 cursor-pointer hover:underline">Don&apos;t have an account? Register</motion.a>
 
-                        {/* Google Sign In Button */}
-                        <motion.button
-                            type="button"
-                            className="w-full bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-md flex items-center justify-center gap-2 transition-colors border border-gray-300"
-                            variants={buttonVariants}
-                            initial="hidden"
-                            animate="visible"
-                            whileHover={{ 
-                                scale: 1.02,
-                                boxShadow: "0 0 20px rgba(255, 255, 255, 0.3)",
-                            }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <motion.img 
-                                src="/google-logo.png" 
-                                alt="Google Logo" 
-                                className="w-5 h-5"
-                                whileHover={{ rotate: 10 }}
-                            />
-                            Continue with Google
-                        </motion.button>
-                    </motion.form>
+                                {/* Divider with Animation */}
+                                <motion.div 
+                                    className="flex items-center mt-4 mb-8"
+                                    variants={itemVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                >
+                                    <motion.div 
+                                        className="flex-grow border-t border-green-600/70"
+                                        initial={{ scaleX: 0 }}
+                                        animate={{ scaleX: 1 }}
+                                        transition={{ delay: 0.8, duration: 0.6 }}
+                                    />
+                                    <span className="mx-2 text-green-400 text-xs font-semibold">OR</span>
+                                    <motion.div 
+                                        className="flex-grow border-t border-green-600/70"
+                                        initial={{ scaleX: 0 }}
+                                        animate={{ scaleX: 1 }}
+                                        transition={{ delay: 0.8, duration: 0.6 }}
+                                    />
+                                </motion.div>
+
+                                {/* Google Sign In Button */}
+                                <motion.button
+                                    type="button"
+                                    className="w-full bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-md flex items-center justify-center gap-2 transition-colors border border-gray-300"
+                                    variants={buttonVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    whileHover={{ 
+                                        scale: 1.02,
+                                        boxShadow: "0 0 20px rgba(255, 255, 255, 0.3)",
+                                    }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    <motion.img 
+                                        src="/google-logo.png" 
+                                        alt="Google Logo" 
+                                        className="w-5 h-5"
+                                        whileHover={{ rotate: 10 }}
+                                    />
+                                    Continue with Google
+                                </motion.button>
+                            </motion.form>
+                        </div>
+                    </div>
                 </motion.div>
             </motion.div>
         </div>
