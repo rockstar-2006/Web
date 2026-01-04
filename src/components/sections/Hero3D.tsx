@@ -6,6 +6,7 @@ import { useRef, Suspense } from 'react'
 import * as THREE from 'three'
 import { motion } from 'framer-motion'
 import { ChevronDown, Users, Activity, Globe } from 'lucide-react'
+import Link from 'next/link'
 
 function SpaceScene() {
     const group = useRef<THREE.Group>(null!)
@@ -44,7 +45,7 @@ function SpaceScene() {
 
 export function Hero3D() {
     return (
-        <div className="relative h-screen w-full bg-[#050805] overflow-hidden pt-20">
+        <div className="relative min-h-screen w-full bg-[#050805] overflow-hidden pt-20">
             {/* Professional 3D Sector - Lowered Alignment and Depth */}
             <motion.div
                 initial={{ opacity: 0 }}
@@ -90,17 +91,17 @@ export function Hero3D() {
                         </p>
 
                         <div className="flex flex-wrap gap-6 pt-4">
-                            <button className="px-10 py-4 bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest hover:bg-emerald-500 transition-all shadow-[0_0_30px_rgba(16,185,129,0.2)]" style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}>
+                            <Link href='/register' className="px-10 py-4 bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest hover:bg-emerald-500 transition-all shadow-[0_0_30px_rgba(16,185,129,0.2)]" style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}>
                                 REGISTER_NOW
-                            </button>
-                            <button className="px-10 py-4 border border-white/20 text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/5 transition-all" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}>
+                            </Link>
+                            <Link href='/events' className="px-10 py-4 border border-white/20 text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/5 transition-all" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}>
                                 EXPLORE_EVENTS
-                            </button>
+                            </Link>
                         </div>
                     </motion.div>
 
                     {/* Minimal Metrics - Green Theme */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-12 pt-16 border-t border-white/5 max-w-xl">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-12 pt-16 mb-10 border-t border-white/5 max-w-xl">
                         {[
                             { label: 'PARTICIPANTS', value: '2500+', icon: Users },
                             { label: 'COLLEGES', value: '50+', icon: Globe },
