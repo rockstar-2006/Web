@@ -60,12 +60,12 @@ export function Navbar() {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className={`relative px-4 py-2 text-[9px] font-black tracking-widest transition-all flex items-center gap-2 ${isActive
+                                className={`relative px-4 py-2 text-[12px] font-black tracking-widest transition-all flex items-center gap-2 ${isActive
                                     ? 'text-emerald-400'
                                     : 'text-white/40 hover:text-white'
                                     }`}
                             >
-                                <Icon className="w-3 h-3" />
+                                <Icon className="w-4 h-4" />
                                 {link.name}
                                 {isActive && (
                                     <motion.div
@@ -94,9 +94,9 @@ export function Navbar() {
 
                     <Link
                         href={isLoggedIn ? "/dashboard" : "/login"}
-                        className="hidden sm:flex items-center gap-2 px-6 py-2 border border-emerald-500/20 text-white font-black text-[9px] hover:bg-emerald-500 hover:text-black transition-all uppercase tracking-[0.2em]"
+                        className="hidden sm:flex items-center gap-2 px-6 py-2 border border-emerald-500/20 text-white font-black text-[12px] hover:bg-emerald-500 hover:text-black transition-all uppercase tracking-[0.2em]"
                     >
-                        <User className="w-3 h-3" />
+                        <User className="w-4 h-4" />
                         {isLoggedIn ? 'SYNCED' : 'AUTHORIZE'}
                     </Link>
 

@@ -232,6 +232,22 @@ export function EventGrid({ missions }: EventGridProps) {
                 searchGlow: 'rgba(245,158,11,0.3)',
                 focusBg: 'group-focus-within/search:bg-amber-500/10'
             }
+        } else if (filter === 'Gaming') {
+            return {
+                text: 'text-cyan-400',
+                textMuted: 'text-cyan-500/80',
+                bg: 'bg-cyan-500',
+                border: 'border-cyan-500/50',
+                focusBorder: 'group-focus-within/search:border-cyan-500/50',
+                focusText: 'group-focus-within/search:text-cyan-300',
+                focusPlaceholder: 'group-focus-within/search:placeholder:text-cyan-400/50',
+                glow: 'shadow-[0_0_10px_rgba(6,182,212,0.5)]',
+                dropGlow: 'drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]',
+                gradient: 'from-cyan-600 via-cyan-400 to-cyan-200',
+                searchBorder: 'group-focus-within/search:text-cyan-500',
+                searchGlow: 'rgba(6,182,212,0.3)',
+                focusBg: 'group-focus-within/search:bg-cyan-500/10'
+            }
         }
         return {
             text: 'text-emerald-400',
@@ -386,7 +402,7 @@ export function EventGrid({ missions }: EventGridProps) {
                             {groupedEvents.technical.length > 0 && (
                                 <div ref={techRef} className="space-y-12">
                                     <div className="flex items-center gap-4 px-8 opacity-80"><div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-emerald-500" /><span className="font-mono font-black tracking-[0.3em] uppercase text-xl md:text-2xl text-emerald-500">Technical Events</span><div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-emerald-500/50 to-emerald-500" /></div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 lg:gap-10 px-4 md:px-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 lg:gap-10 px-4 md:px-8">
                                         {groupedEvents.technical.map((event, idx) => (
                                             <MissionCard key={event.id} event={event} idx={idx} theme={getEventTheme(event.type)} complexClip={complexClip} isRegistered={userData?.registeredEvents?.some(re => re.id === event.id)} onRegister={handleRegisterClick} className="will-change-gpu" />
                                         ))}
@@ -396,7 +412,7 @@ export function EventGrid({ missions }: EventGridProps) {
                             {groupedEvents.cultural.length > 0 && (
                                 <div ref={cultRef} className="space-y-16 mt-12">
                                     <div className="flex items-center gap-4 px-8 opacity-90"><div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-amber-500/50 to-amber-500" /><div className="flex flex-col items-center"><span className="font-mono font-black tracking-[0.3em] uppercase text-xl md:text-3xl text-amber-500">Cultural Events</span><span className="text-[10px] tracking-[0.5em] text-amber-500/60 uppercase mt-2">Arts // Music // Dance</span></div><div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-amber-500/50 to-amber-500" /></div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 md:gap-16 xl:gap-24 px-4 md:px-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10 md:gap-16 xl:gap-24 px-4 md:px-8">
                                         {groupedEvents.cultural.map((event, idx) => (
                                             <MissionCard key={event.id} event={event} idx={idx} theme={getEventTheme(event.type)} complexClip={complexClip} isRegistered={userData?.registeredEvents?.some(re => re.id === event.id)} onRegister={handleRegisterClick} className="will-change-gpu" />
                                         ))}
@@ -406,7 +422,7 @@ export function EventGrid({ missions }: EventGridProps) {
                             {groupedEvents.gaming.length > 0 && (
                                 <div ref={gameRef} className="space-y-12 mt-12">
                                     <div className="flex items-center gap-4 px-8 opacity-80"><div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-cyan-500" /><span className="font-mono font-black tracking-[0.3em] uppercase text-xl md:text-2xl text-cyan-500">Gaming Arena</span><div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-cyan-500/50 to-cyan-500" /></div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 lg:gap-10 px-4 md:px-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 lg:gap-10 px-4 md:px-8">
                                         {groupedEvents.gaming.map((event, idx) => (
                                             <MissionCard key={event.id} event={event} idx={idx} theme={getEventTheme(event.type)} complexClip={complexClip} isRegistered={userData?.registeredEvents?.some(re => re.id === event.id)} onRegister={handleRegisterClick} className="will-change-gpu" />
                                         ))}
@@ -415,7 +431,7 @@ export function EventGrid({ missions }: EventGridProps) {
                             )}
                         </>
                     ) : (
-                        <div className={`grid grid-cols-1 md:grid-cols-2 ${filter === 'Cultural' ? 'xl:grid-cols-3 gap-10 md:gap-16 xl:gap-24' : 'xl:grid-cols-4 gap-8 lg:gap-10'} px-4 md:px-8`}>
+                        <div className={`grid grid-cols-1 md:grid-cols-2 ${filter === 'Cultural' ? 'xl:grid-cols-3 2xl:grid-cols-4 gap-10 md:gap-16 xl:gap-24' : 'xl:grid-cols-3 2xl:grid-cols-4 gap-8 lg:gap-10'} px-4 md:px-8`}>
                             {filtered.map((event, idx) => (
                                 <MissionCard key={event.id} event={event} idx={idx} theme={getEventTheme(event.type)} complexClip={complexClip} isRegistered={userData?.registeredEvents?.some(re => re.id === event.id)} onRegister={handleRegisterClick} className="will-change-gpu" />
                             ))}

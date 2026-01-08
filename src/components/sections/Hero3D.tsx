@@ -96,7 +96,7 @@ export function Hero3D() {
                         transition={{ duration: 0.8 }}
                         className="space-y-8"
                     >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 lg:mt-20">
                             <div className="w-12 h-[1px] bg-emerald-500" />
                             <span className="text-emerald-400 font-mono text-[9px] uppercase tracking-[0.6em] font-black italic">
                                 ACADEMIC_SYNERGY_2K26
@@ -113,7 +113,7 @@ export function Hero3D() {
                         </p>
 
                         <div className="flex flex-wrap gap-6 pt-4">
-                            <Link href='/register' className="px-10 py-4 bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest hover:bg-emerald-500 transition-all shadow-[0_0_30px_rgba(16,185,129,0.2)]" style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}>
+                            <Link href='/login' className="px-10 py-4 bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest hover:bg-emerald-500 transition-all shadow-[0_0_30px_rgba(16,185,129,0.2)]" style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}>
                                 REGISTER_NOW
                             </Link>
                             <Link href='/events' className="px-10 py-4 border border-white/20 text-white font-black uppercase text-[10px] tracking-widest hover:bg-white/5 transition-all" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}>

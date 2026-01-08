@@ -312,19 +312,19 @@ export const MissionCard = memo(({
 
                         <div className={`px-6 z-10 w-full mt-auto mb-4 ${event.type === 'Technical' ? 'grid grid-cols-3 gap-2 border-y border-white/5 py-3 bg-white/[0.02]' : 'flex justify-between items-center'}`}>
                             <div className={`flex flex-col gap-0.5 ${event.type === 'Technical' ? 'items-start border-r border-white/5 pr-2' : 'items-start'}`}>
-                                <span className={`text-[7px] font-black ${event.type === 'Cultural' ? 'text-amber-500/80' : 'text-emerald-500/60'} uppercase tracking-widest`}>DATE</span>
+                                <span className={`text-[7px] font-black ${event.type === 'Cultural' ? 'text-amber-500/80' : (event.type === 'Gaming' ? 'text-cyan-500/80' : 'text-emerald-500/60')} uppercase tracking-widest`}>DATE</span>
                                 <span className="text-[10px] font-bold text-white/90 font-mono">{event.date}</span>
                             </div>
 
                             <div className={`flex flex-col gap-0.5 ${event.type === 'Technical' ? 'items-center border-r border-white/5 px-2' : 'items-center'}`}>
-                                <span className={`text-[7px] font-black ${event.type === 'Cultural' ? 'text-amber-500/80' : 'text-emerald-500/60'} uppercase tracking-widest`}>TYPE</span>
+                                <span className={`text-[7px] font-black ${event.type === 'Cultural' ? 'text-amber-500/80' : (event.type === 'Gaming' ? 'text-cyan-500/80' : 'text-emerald-500/60')} uppercase tracking-widest`}>TYPE</span>
                                 <span className="text-[10px] font-bold text-white/90 font-mono uppercase truncate w-full text-center">
                                     {event.rules[0]?.split(' ')[0] || 'OPEN'}
                                 </span>
                             </div>
 
                             <div className={`flex flex-col ${event.type === 'Technical' ? 'items-end pl-2' : 'items-end gap-0.5'}`}>
-                                <span className={`text-[7px] font-black ${event.type === 'Cultural' ? 'text-amber-500/80' : 'text-emerald-500/60'} uppercase tracking-widest`}>PRIZE</span>
+                                <span className={`text-[7px] font-black ${event.type === 'Cultural' ? 'text-amber-500/80' : (event.type === 'Gaming' ? 'text-cyan-500/80' : 'text-emerald-500/60')} uppercase tracking-widest`}>PRIZE</span>
                                 <span className="text-[11px] font-mono text-white font-bold">{event.prizePool}</span>
                             </div>
                         </div>
@@ -342,7 +342,7 @@ export const MissionCard = memo(({
                                         e.stopPropagation()
                                         onRegister(event)
                                     }}
-                                    className={`relative py-3 text-[10px] font-black uppercase tracking-widest transition-all duration-300 overflow-hidden group/btn border-2 ${event.type === 'Cultural' ? 'border-amber-500 bg-amber-500 hover:bg-amber-400 text-black' : 'border-emerald-500 bg-emerald-500 hover:bg-emerald-400 text-black'} shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-95 flex items-center justify-center gap-2`}
+                                    className={`relative py-3 text-[10px] font-black uppercase tracking-widest transition-all duration-300 overflow-hidden group/btn border-2 ${event.type === 'Cultural' ? 'border-amber-500 bg-amber-500 hover:bg-amber-400 text-black' : (event.type === 'Gaming' ? 'border-cyan-500 bg-cyan-500 hover:bg-cyan-400 text-black' : 'border-emerald-500 bg-emerald-500 hover:bg-emerald-400 text-black')} shadow-[0_0_20px_rgba(0,0,0,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-95 flex items-center justify-center gap-2`}
                                     style={{ clipPath: 'polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px)' }}
                                 >
                                     <UserPlus className="w-3.5 h-3.5" />
@@ -354,7 +354,7 @@ export const MissionCard = memo(({
                                         e.stopPropagation()
                                         router.push(`/events/${event.id}`)
                                     }}
-                                    className={`relative py-3 text-[10px] font-black uppercase tracking-widest transition-all duration-300 overflow-hidden group/btn border-2 ${event.type === 'Cultural' ? 'border-amber-500 bg-black/40 hover:bg-amber-500/10 text-amber-500' : 'border-emerald-500 bg-black/40 hover:bg-emerald-500/10 text-emerald-500'} shadow-[0_0_15px_rgba(0,0,0,0.4)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95 flex items-center justify-center gap-2`}
+                                    className={`relative py-3 text-[10px] font-black uppercase tracking-widest transition-all duration-300 overflow-hidden group/btn border-2 ${event.type === 'Cultural' ? 'border-amber-500 bg-black/40 hover:bg-amber-500/10 text-amber-500' : (event.type === 'Gaming' ? 'border-cyan-500 bg-black/40 hover:bg-cyan-500/10 text-cyan-500' : 'border-emerald-500 bg-black/40 hover:bg-emerald-500/10 text-emerald-500')} shadow-[0_0_15px_rgba(0,0,0,0.4)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95 flex items-center justify-center gap-2`}
                                     style={{ clipPath: 'polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px)' }}
                                 >
                                     DETAILS
