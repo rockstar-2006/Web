@@ -1,5 +1,7 @@
 'use client'
 
+import { getAuthToken, getCurrentUser, loginRequired, loginWithEmail, signOut } from '@/lib/firebaseClient'
+import { useRouter } from 'next/navigation'
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
 export interface UserData {
@@ -34,44 +36,71 @@ interface AppContextType {
     clearCart: () => void
     totalAmount: number
     isLoggedIn: boolean
+    needsOnboarding: boolean
     userData: UserData | null
-    login: (email: string, password?: string) => void
+    login: (email: string, password: string) => void
     logout: () => void
     registerUser: (data: Omit<UserData, 'id' | 'profileCode' | 'hasPaid' | 'registeredEvents' | 'avatar' | 'studentType'>) => void
     markAsPaid: () => void
     updateRegisteredEvents: (events: { id: string, teamName: string }[]) => void
-    updateAvatar: (avatarUrl: string) => void
+    updateAvatar: (avatarUrl: string) => void,
+    mountUser: () => Promise<void>
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
+
+async function getUserData() {
+    const token = await getAuthToken();
+    if (!token) {
+        return null;
+    }
+    const response = await fetch('/api/me', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (!response.ok) {
+        return null;
+    }
+    const data = await response.json();
+    return data.user;
+}
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
     const [cart, setCart] = useState<Event[]>([])
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [userData, setUserData] = useState<UserData | null>(null)
+    const [needsOnboarding, setNeedsOnboarding] = useState(false)
+    const router = useRouter();
 
-    // Load from LocalStorage on mount
-    useEffect(() => {
-        const savedUser = localStorage.getItem('v_user_data')
-        const savedIsLoggedIn = localStorage.getItem('v_is_logged_in')
-        if (savedUser && savedIsLoggedIn === 'true') {
-            setUserData(JSON.parse(savedUser))
-            setIsLoggedIn(true)
-        }
-    }, [])
-
-    // Sync with LocalStorage
-    useEffect(() => {
-        if (userData) {
-            localStorage.setItem('v_user_data', JSON.stringify(userData))
+    // On mount, check auth and user profile
+    const mountUser = async () => {
+        const currentUser = getCurrentUser();
+        console.log("Mounting user, currentUser:", currentUser);
+        if (currentUser) {
+            try {
+                const userData = await getUserData();
+                if (userData) {
+                    setUserData(userData);
+                    setIsLoggedIn(true);
+                    setNeedsOnboarding(false);
+                } else {
+                    // Authenticated but no user profile in DB
+                    setUserData(null);
+                    setIsLoggedIn(true);
+                    setNeedsOnboarding(true);
+                    router.push('/login');
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
         } else {
-            localStorage.removeItem('v_user_data')
+            setIsLoggedIn(false);
+            setUserData(null);
+            setNeedsOnboarding(false);
         }
-    }, [userData])
-
-    useEffect(() => {
-        localStorage.setItem('v_is_logged_in', isLoggedIn.toString())
-    }, [isLoggedIn])
+    }
 
     const addToCart = (event: Event) => {
         if (!cart.find(item => item.id === event.id)) {
@@ -87,26 +116,47 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     const totalAmount = cart.reduce((total, item) => total + item.fee, 0)
 
-    const login = (email: string, password?: string) => {
-        // Dummy login check against stored users
-        const users = JSON.parse(localStorage.getItem('v_all_users') || '[]')
-        const foundUser = users.find((u: UserData) => u.email === email && (!password || u.password === password))
-        if (foundUser) {
-            setUserData(foundUser)
-            setIsLoggedIn(true)
-        } else {
-            alert("Invalid credentials or user not found. Please register.")
+    const login = async (email: string, password: string) => {
+        if(email === '' || password === '') {
+            alert("Please enter a password.")
+            return;
+        }
+
+        try {
+            const user = await loginWithEmail(email, password);
+            if (user) {
+                const userData = await getUserData();
+                if (userData) {
+                    setUserData(userData);
+                    setIsLoggedIn(true);
+                    setNeedsOnboarding(false);
+                } else {
+                    // Authenticated but no user profile in DB
+                    setUserData(null);
+                    setIsLoggedIn(true);
+                    setNeedsOnboarding(true);
+                    router.push('/login');
+                }
+            } else {
+                alert("Invalid credentials or user not found. Please register.")
+            }
+        } catch (error) {
+            console.error("Login failed:", error);
+            alert("Login failed. Please check your credentials and try again.")
         }
     }
 
     const logout = () => {
+        signOut();
         setIsLoggedIn(false)
         setUserData(null)
     }
 
-    const registerUser = (data: Omit<UserData, 'id' | 'profileCode' | 'hasPaid' | 'registeredEvents' | 'avatar' | 'studentType'>) => {
+    const registerUser = async (data: Omit<UserData, 'id' | 'profileCode' | 'hasPaid' | 'registeredEvents' | 'avatar' | 'studentType'>) => {
         const profileCode = Math.random().toString(36).substring(2, 8).toUpperCase()
-        const id = Math.random().toString(36).substring(2, 11)
+        const currentUser = getCurrentUser();
+        const id = currentUser ? currentUser.uid : Math.random().toString(36).substring(2, 10);
+
         const studentType = data.email.endsWith('@sode-edu.in') ? 'internal' : 'external'
 
         const newUser: UserData = {
@@ -119,12 +169,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             studentType
         }
 
-        const users = JSON.parse(localStorage.getItem('v_all_users') || '[]')
-        users.push(newUser)
-        localStorage.setItem('v_all_users', JSON.stringify(users))
-
-        setUserData(newUser)
-        setIsLoggedIn(true)
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentUser ? (await getAuthToken()) : ''}`
+            },
+            body: JSON.stringify({ user: newUser, uid: id }),
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to register user');
+            }
+            return response.json();
+        }).then(data => {
+            console.log('User registered successfully:', data);
+            setUserData(newUser);
+            setIsLoggedIn(true);
+            setNeedsOnboarding(false);
+        }).catch(error => {
+            console.error('Error registering user:', error);
+        });
     }
 
     const markAsPaid = () => {
@@ -186,12 +250,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             totalAmount,
             isLoggedIn,
             userData,
+            needsOnboarding,
             login,
             logout,
             registerUser,
             markAsPaid,
             updateRegisteredEvents,
-            updateAvatar
+            updateAvatar,
+            mountUser
         }}>
             {children}
         </AppContext.Provider>

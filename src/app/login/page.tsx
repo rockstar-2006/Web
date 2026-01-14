@@ -2,9 +2,9 @@
 
 import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Mail, Lock, Rocket, ArrowRight, Shield, Globe, Cpu, User, School, Search, Upload, CheckCircle2, ChevronDown, Camera, X } from 'lucide-react'
+import { Mail, Lock, Rocket, ArrowRight, Shield, Globe, Cpu, User, School, Search, Upload, CheckCircle2, ChevronDown, Camera, X, Phone } from 'lucide-react'
 import { useApp } from '@/context/AppContext'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import GridScan from '@/components/ui/GridScan'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
@@ -100,11 +100,13 @@ function NetworkPoints() {
 }
 
 import ElectricBorder from '@/components/ui/ElectricBorder'
+import { createUserWithEmail, loginWithEmail, loginWithGoogle, onUserSignedIn } from '@/lib/firebaseClient'
 
 export default function LoginPage() {
-    const { login, registerUser, isLoggedIn } = useApp()
+    const { needsOnboarding: onboardParam, registerUser, isLoggedIn, mountUser } = useApp()
     const router = useRouter()
-    const [step, setStep] = useState(1) // 1: Entry, 2: Complete Profile
+    const [step, setStep] = useState(onboardParam ? 2 : 1) // 1: Entry, 2: Complete Profile
+
     const [isRegister, setIsRegister] = useState(false)
 
     // Form States
@@ -112,6 +114,9 @@ export default function LoginPage() {
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
     const [usn, setUsn] = useState('')
+    const [age, setAge] = useState('')
+    const [phone, setPhone] = useState('')
+    const [gender, setGender] = useState('Male')
     const [college, setCollege] = useState('')
     const [otherCollege, setOtherCollege] = useState('')
     const [idCardPreview, setIdCardPreview] = useState<string | null>(null)
@@ -120,30 +125,58 @@ export default function LoginPage() {
     const [collegeSearch, setCollegeSearch] = useState('')
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
+    onUserSignedIn((user) => {
+        mountUser().then(() => {
+            if(onboardParam) {
+                setEmail(user.email || '') // Pre-filled from "Google"
+                setName(user.displayName || '') // Pre-filled from "Google"
+                setPhone(user.phoneNumber || '') // Pre-filled from "Google"
+            }
+            setStep(onboardParam ? 2 : 1);
+        });
+    });
+
     useEffect(() => {
-        if (isLoggedIn) {
+        if (isLoggedIn && !onboardParam) {
             router.push('/events')
         }
-    }, [isLoggedIn, router])
+        console.log({ isLoggedIn, onboardParam })
+    }, [isLoggedIn, router, onboardParam])
 
     const filteredColleges = COLLEGES.filter(c =>
         c.toLowerCase().includes(collegeSearch.toLowerCase())
     )
 
-    const handleSubmitStep1 = (e: React.FormEvent) => {
+    const handleSubmitStep1 = async (e: React.FormEvent) => {
         e.preventDefault()
         if (isRegister) {
-            setStep(2)
+            try {
+                const user = await createUserWithEmail(email, password);
+                setStep(2)
+            } catch (error) {
+                console.error("Login failed:", error);
+            }
         } else {
-            login(email, password)
+            try {
+                const user = await loginWithEmail(email, password);
+            } catch (error) {
+                console.error("Login failed:", error);
+            }
         }
     }
 
-    const handleGoogleLoginStep1 = () => {
-        // Mock Google Verification -> Move to details
-        setStep(2)
-        setEmail('operator@global.node') // Pre-filled from "Google"
-        setName('NODE_OPERATOR')
+    const handleGoogleLoginStep1 = async () => {
+        try {
+            const user = await loginWithGoogle();
+            if(isRegister) {
+                setStep(2)
+                setEmail(user.email || '') // Pre-filled from "Google"
+                setName(user.displayName || '') // Pre-filled from "Google"
+                setPhone(user.phoneNumber || '') // Pre-filled from "Google"
+            }
+        } catch (error) {
+            console.error("Google login failed:", error);
+        }
     }
 
     const handleFinalSubmit = (e: React.FormEvent) => {
@@ -152,11 +185,10 @@ export default function LoginPage() {
         registerUser({
             name,
             email,
-            password: password || 'oauth_encrypted_session',
             usn,
             collegeName: finalCollege,
-            age: '18',
-            phone: 'PENDING',
+            age,
+            phone,
             idCardUrl: idCardPreview || undefined
         })
     }
@@ -170,11 +202,11 @@ export default function LoginPage() {
         }
     }
 
-    if (isLoggedIn) return null
+    if (isLoggedIn && !onboardParam) return null
 
     return (
         <main className="min-h-screen bg-black text-white relative flex flex-col items-center pt-32 pb-12 px-4 md:px-8 overflow-y-auto">
-            <div className="fixed inset-0 z-0 opacity-100">
+            <div className="fixed inset-0 z-0 opacity-100 pointer-events-none">
                 <GridScan
                     sensitivity={0.55}
                     lineThickness={1}
@@ -338,7 +370,7 @@ export default function LoginPage() {
                                         </button>
                                     </div>
 
-                                    <form onSubmit={handleFinalSubmit} className="space-y-10">
+                                    <form onSubmit={handleFinalSubmit} className="space-y-10 max-h-96 pointer-events-auto overflow-y-auto custom-scrollbar">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                             {/* Name */}
                                             <div className="space-y-3 group">
@@ -368,6 +400,56 @@ export default function LoginPage() {
                                                     className="w-full bg-white/[0.05] border border-white/10 rounded-2xl px-6 py-4 text-sm font-black tracking-widest focus:border-emerald-500/50 outline-none transition-all uppercase text-white placeholder:text-white/10"
                                                 />
                                             </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                            <div className="space-y-3 group">
+                                                <label className="text-[11px] font-black text-white/50 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                                    <Shield className="w-3.5 h-3.5 text-emerald-400" /> Age of Operator
+                                                </label>
+                                                <input
+                                                    required
+                                                    type="number"
+                                                    min={17}
+                                                    max={22}
+                                                    value={age}
+                                                    onChange={(e) => setAge(e.target.value)}
+                                                    placeholder="18"
+                                                    className="w-full bg-white/[0.05] border border-white/10 rounded-2xl px-6 py-4 text-sm font-black tracking-widest focus:border-emerald-500/50 outline-none transition-all uppercase text-white placeholder:text-white/10"
+                                                />
+                                            </div>
+                                            {/* Gender */}
+                                            <div className="space-y-3 group">
+                                                <label className="text-[11px] font-black text-white/50 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                                    <User className="w-3.5 h-3.5 text-emerald-400" /> Gender Identity
+                                                </label>
+                                                <select
+                                                    required
+                                                    value={gender}
+                                                    onChange={(e) => setGender(e.target.value)}
+                                                    className="w-full bg-white/[0.05] border border-white/10 rounded-2xl px-6 py-4 text-sm font-black tracking-widest focus:border-emerald-500/50 outline-none transition-all uppercase placeholder:text-white/10 appearance-none"
+                                                >
+                                                    <option value="" disabled>Select your gender</option>
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {/* Phone */}
+                                        <div className="space-y-3 group">
+                                            <label className="text-[11px] font-black text-white/50 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                                <Phone className="w-3.5 h-3.5 text-emerald-400" /> Contact Number
+                                            </label>
+                                            <input
+                                                required
+                                                type="tel"
+                                                value={phone}
+                                                onChange={(e) => setPhone(e.target.value)}
+                                                placeholder="+91 98765 43210"
+                                                className="w-full bg-white/[0.05] border border-white/10 rounded-2xl px-6 py-4 text-sm font-black tracking-widest focus:border-emerald-500/50 outline-none transition-all uppercase text-white placeholder:text-white/10"
+                                            />
                                         </div>
 
                                         {/* College Searchable Dropdown */}

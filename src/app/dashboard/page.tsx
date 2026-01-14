@@ -8,12 +8,17 @@ import { useRouter } from 'next/navigation'
 import TerminalBackground from '@/components/ui/TerminalBackground'
 import HolographicAvatar from '@/components/ui/HolographicAvatar'
 import GridScan from '@/components/ui/GridScan'
+import { onUserSignedIn } from '@/lib/firebaseClient'
 
 export default function DashboardPage() {
-    const { userData, logout, isLoggedIn, updateAvatar } = useApp()
+    const { userData, logout, isLoggedIn, updateAvatar, mountUser } = useApp()
     const router = useRouter()
     const [currentTime, setCurrentTime] = useState('')
     const [mounted, setMounted] = useState(false)
+
+    onUserSignedIn(() => {
+        mountUser();
+    });
 
     useEffect(() => {
         setMounted(true)
